@@ -43,7 +43,7 @@ std::vector<cv::Point> applyTransformation(std::vector<cv::Point> _points, cv::M
 	return _points;
 }
 
-void test(std::vector<Point>& _points, int _level)
+void tree(std::vector<Point>& _points, int _level)
 {
 	float angle = 30;
 	float rotation = CV_PI / 180.0f * angle;
@@ -97,8 +97,8 @@ void test(std::vector<Point>& _points, int _level)
 
 	if (_level < 5)
 	{
-		test(pointLeft, _level + 1);
-		test(pointRight, _level + 1);
+		tree(pointLeft, _level + 1);
+		tree(pointRight, _level + 1);
 	}
 }
 
@@ -112,7 +112,7 @@ int main(int argc, char** argv)
 	points.push_back(Point(weight + size, height));
 	points.push_back(Point(weight - size, height));
 
-	test(points, 0);
+	tree(points, 0);
 
 	imshow("canvas", canvas);
 

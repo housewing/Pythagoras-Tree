@@ -55,7 +55,7 @@ std::vector<Point> transformationPoint(Point _points, Point _center, float _angl
 	return pointSet;
 }
 
-void test(std::vector<Point> _points, int _level)
+void tree(std::vector<Point> _points, int _level)
 {
 	Point2f center;
 	center.x = (_points[2].x + _points[3].x) / 2.0;
@@ -103,9 +103,9 @@ void test(std::vector<Point> _points, int _level)
 
 	if (_level < 7)
 	{
-		test(pointSet[0], _level + 1);
-		test(pointSet[1], _level + 1);
-		test(pointSet[2], _level + 1);
+		tree(pointSet[0], _level + 1);
+		tree(pointSet[1], _level + 1);
+		tree(pointSet[2], _level + 1);
 	}
 }
 
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
 	points.push_back(Point(weight + size, height - 2 * size));
 	points.push_back(Point(weight - size, height - 2 * size));
 
-	test(points, 0);
+	tree(points, 0);
 	imshow("canvas", canvas);
 
 	waitKey();
