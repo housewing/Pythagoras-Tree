@@ -5,8 +5,6 @@
 using namespace cv;
 
 Mat canvas = Mat::zeros(480, 640, CV_8UC3);
-std::vector<Point> points;
-
 int size = 40;
 
 std::vector<cv::Point> applyTransformation(std::vector<cv::Point> _points, cv::Mat transformation, cv::Point2f reference, bool _params)
@@ -43,7 +41,7 @@ std::vector<cv::Point> applyTransformation(std::vector<cv::Point> _points, cv::M
 	return _points;
 }
 
-void tree(std::vector<Point>& _points, int _level)
+void draw(std::vector<Point>& _points, int _level)
 {
 	float angle = 30;
 	float rotation = CV_PI / 180.0f * angle;
@@ -61,18 +59,8 @@ void tree(std::vector<Point>& _points, int _level)
 	transformationLeft.at<float>(1, 0) = -cos(rotation) * sin(rotation);
 	transformationLeft.at<float>(1, 1) = sin(rotation) * sin(rotation);
 
-	Point2f center;
-	for (auto& p : _points)
-	{
-		center.x += p.x;
-		center.y += p.y;
-	}
-	center.x /= 4.0;
-	center.y /= 4.0;
-	//std::cout << "center " << center << std::endl;
-
-	std::vector<Point> pointRight = applyTransformation(_points, transformationRight, center, true);
-	std::vector<Point> pointLeft = applyTransformation(_points, transformationLeft, center, false);
+	std::vector<Point> pointRight = applyTransformation(_points, transformationRight, _points[3], true);
+	std::vector<Point> pointLeft = applyTransformation(_points, transformationLeft, _points[3], false);
 
 	//for (unsigned int i = 0; i < _points.size(); i++)
 	//{
@@ -97,8 +85,8 @@ void tree(std::vector<Point>& _points, int _level)
 
 	if (_level < 5)
 	{
-		tree(pointLeft, _level + 1);
-		tree(pointRight, _level + 1);
+		draw(pointLeft, _level + 1);
+		draw(pointRight, _level + 1);
 	}
 }
 
@@ -106,13 +94,14 @@ int main(int argc, char** argv)
 {
 	int height = canvas.rows;
 	int weight = canvas.cols / 2;
-
+	
+	std::vector<Point> points;
 	points.push_back(Point(weight - size, height - 2 * size));
 	points.push_back(Point(weight + size, height - 2 * size));
 	points.push_back(Point(weight + size, height));
 	points.push_back(Point(weight - size, height));
 
-	tree(points, 0);
+	draw(points, 0);
 
 	imshow("canvas", canvas);
 
